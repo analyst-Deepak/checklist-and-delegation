@@ -67,118 +67,125 @@ const LoginPage = () => {
     );
   };
 
-  // Fetch master data on component mount
-  useEffect(() => {
-    const fetchMasterData = async () => {
-      const SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycbzjRBvulOxLf0E_k_T2vT6aQfdjMrms1Ef7rdQeWZWJ1b2JVXldfRRzEAOijRThl85N/exec";
-      const CACHE_TTL = 60 * 60 * 1000; // 1 Hour TTL
+  // Fetch master data
+  const fetchMasterData = async (forceRefresh = false) => {
+    const SCRIPT_URL =
+      "https://script.google.com/macros/s/AKfycbzjRBvulOxLf0E_k_T2vT6aQfdjMrms1Ef7rdQeWZWJ1b2JVXldfRRzEAOijRThl85N/exec";
+    const CACHE_TTL = 60 * 60 * 1000; // 1 Hour TTL
 
-      // 1. Try to load from cache first for instant UI response
-      const cachedDataStr = localStorage.getItem("masterDataCache");
-      const cachedTimeStr = localStorage.getItem("masterDataCacheTime");
-      let hasCache = false;
-      let isCacheValid = false;
+    // 1. Try to load from cache first for instant UI response
+    const cachedDataStr = localStorage.getItem("masterDataCache");
+    const cachedTimeStr = localStorage.getItem("masterDataCacheTime");
+    let hasCache = false;
+    let isCacheValid = false;
 
-      if (cachedDataStr) {
-        try {
-          const cachedData = JSON.parse(cachedDataStr);
-          setMasterData(cachedData);
-          setIsDataLoading(false); // Enable login button immediately
-          hasCache = true;
-
-          const cachedTime = Number(cachedTimeStr || 0);
-          if (cachedTime && Date.now() - cachedTime < CACHE_TTL) {
-            isCacheValid = true;
-          }
-        } catch (e) {
-          console.error("Failed to parse cache", e);
-        }
-      }
-
-      // If cache is valid (within 1 hour), reuse cached data and avoid redundant API call
-      if (isCacheValid) {
-        return;
-      }
-
+    if (cachedDataStr && !forceRefresh) {
       try {
-        if (!hasCache) {
-          setIsDataLoading(true); // Only show spinner if no cache exists
+        const cachedData = JSON.parse(cachedDataStr);
+        setMasterData(cachedData);
+        setIsDataLoading(false); // Enable login button immediately
+        hasCache = true;
+
+        const cachedTime = Number(cachedTimeStr || 0);
+        if (cachedTime && Date.now() - cachedTime < CACHE_TTL) {
+          isCacheValid = true;
         }
-
-        // Fetch data using Apps Script Web App to avoid CORS issues
-        const response = await fetch(`${SCRIPT_URL}?action=fetch&sheet=master`);
-        const data = await response.json();
-
-        // Create userCredentials and userRoles objects from the sheet data
-        const userCredentials = {};
-        const userRoles = {};
-        const userEmails = {};
-
-        // Process the data rows (skip header row if it exists)
-        if (data.table && data.table.rows) {
-          for (let i = 1; i < data.table.rows.length; i++) {
-            const row = data.table.rows[i];
-            const username = row.c[2]
-              ? String(row.c[2].v || "")
-                .trim()
-                .toLowerCase()
-              : "";
-            const password = row.c[3] ? String(row.c[3].v || "").trim() : "";
-            const role = row.c[4] ? String(row.c[4].v || "").trim() : "user";
-            const email = row.c[5] ? String(row.c[5].v || "").trim() : "";
-
-            if (username && password && password.trim() !== "") {
-              if (isInactiveRole(role)) continue;
-              const normalizedRole = role.toLowerCase();
-              userCredentials[username] = password;
-              userRoles[username] = normalizedRole;
-              userEmails[username] = email;
-            }
-          }
-        }
-
-        const newMasterData = { userCredentials, userRoles, userEmails };
-        setMasterData(newMasterData);
-        
-        // Save to cache with timestamp for 1-hour refresh interval
-        try {
-          localStorage.setItem("masterDataCache", JSON.stringify(newMasterData));
-          localStorage.setItem("masterDataCacheTime", Date.now().toString());
-        } catch(e) {
-          console.warn('Cache full');
-        }
-
-      } catch (error) {
-        console.error("Error Fetching Master Data:", error);
-        
-        if (!hasCache) {
-          // Fallback only if we have NO cache
-          try {
-            const fallbackResponse = await fetch(SCRIPT_URL, {
-              method: "GET",
-            });
-
-            if (fallbackResponse.ok) {
-              showToast(
-                "Unable to load user data. Please contact administrator.",
-                "error"
-              );
-            }
-          } catch (fallbackError) {
-            console.error("Fallback also failed:", fallbackError);
-          }
-
-          showToast(
-            `Network error: ${error.message}. Please try again later.`,
-            "error"
-          );
-        }
-      } finally {
-        setIsDataLoading(false);
+      } catch (e) {
+        console.error("Failed to parse cache", e);
       }
-    };
+    }
 
+    // If cache is valid (within 1 hour), reuse cached data and avoid redundant API call
+    if (isCacheValid && !forceRefresh) {
+      return;
+    }
+
+    try {
+      if (!hasCache || forceRefresh) {
+        setIsDataLoading(true); // Only show spinner if no cache exists or if forcing refresh
+      }
+
+      // Fetch data using Apps Script Web App to avoid CORS issues
+      const fetchUrl = forceRefresh 
+        ? `${SCRIPT_URL}?action=fetch&sheet=master&_t=${Date.now()}`
+        : `${SCRIPT_URL}?action=fetch&sheet=master`;
+        
+      const response = await fetch(fetchUrl);
+      const data = await response.json();
+
+      // Create userCredentials and userRoles objects from the sheet data
+      const userCredentials = {};
+      const userRoles = {};
+      const userEmails = {};
+
+      // Process the data rows (skip header row if it exists)
+      if (data.table && data.table.rows) {
+        for (let i = 1; i < data.table.rows.length; i++) {
+          const row = data.table.rows[i];
+          const username = row.c[2]
+            ? String(row.c[2].v || "")
+              .trim()
+              .toLowerCase()
+            : "";
+          const password = row.c[3] ? String(row.c[3].v || "").trim() : "";
+          const role = row.c[4] ? String(row.c[4].v || "").trim() : "user";
+          const email = row.c[5] ? String(row.c[5].v || "").trim() : "";
+
+          if (username && password && password.trim() !== "") {
+            if (isInactiveRole(role)) continue;
+            const normalizedRole = role.toLowerCase();
+            userCredentials[username] = password;
+            userRoles[username] = normalizedRole;
+            userEmails[username] = email;
+          }
+        }
+      }
+
+      const newMasterData = { userCredentials, userRoles, userEmails };
+      setMasterData(newMasterData);
+      
+      // Save to cache with timestamp for 1-hour refresh interval
+      try {
+        localStorage.setItem("masterDataCache", JSON.stringify(newMasterData));
+        localStorage.setItem("masterDataCacheTime", Date.now().toString());
+      } catch(e) {
+        console.warn('Cache full');
+      }
+
+      if (forceRefresh) {
+        showToast("Data refreshed successfully", "success");
+      }
+    } catch (error) {
+      console.error("Error Fetching Master Data:", error);
+      
+      if (!hasCache || forceRefresh) {
+        // Fallback only if we have NO cache or if forcing
+        try {
+          const fallbackResponse = await fetch(SCRIPT_URL, {
+            method: "GET",
+          });
+
+          if (fallbackResponse.ok) {
+            showToast(
+              "Unable to load user data. Please contact administrator.",
+              "error"
+            );
+          }
+        } catch (fallbackError) {
+          console.error("Fallback also failed:", fallbackError);
+        }
+
+        showToast(
+          `Network error: ${error.message}. Please try again later.`,
+          "error"
+        );
+      }
+    } finally {
+      setIsDataLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchMasterData();
   }, []);
 
@@ -411,9 +418,18 @@ const LoginPage = () => {
         <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-64 h-64 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
         
         <div className="w-full max-w-md bg-white p-8 md:p-10 rounded-[2rem] shadow-xl border border-gray-100 relative z-10">
-          <div className="text-center mb-10">
+          <div className="text-center mb-10 relative">
             <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Welcome Back</h2>
             <p className="text-gray-500 mt-3 text-sm">Please enter your credentials to access your account</p>
+            <button
+              type="button"
+              onClick={() => fetchMasterData(true)}
+              disabled={isDataLoading}
+              className="absolute top-0 right-0 p-2 text-gray-400 hover:text-purple-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border-none outline-none shadow-none"
+              title="Force Refresh Data"
+            >
+              <i className={`fas fa-sync-alt ${isDataLoading ? "animate-spin" : ""}`}></i>
+            </button>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">

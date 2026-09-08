@@ -188,9 +188,17 @@ export default function AdminLayout({ children, darkMode, toggleDarkMode }) {
         <div className="flex h-16 items-center justify-center px-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.4)' }}>
           <Link
             to="/dashboard/admin"
-            className="flex items-center gap-2 font-semibold text-slate-700"
+            className="flex items-center gap-2 font-semibold text-slate-700 w-full justify-center"
           >
-            <img src={sbhLogo} alt="Checklist & Delegation" className="h-14 w-auto object-contain" />
+            <h1 
+              className="text-2xl font-extrabold tracking-widest uppercase italic"
+              style={{
+                color: "#1e293b",
+                textShadow: "1px 1px 0 #94a3b8, 2px 2px 0 #64748b, 3px 3px 0 #475569, 4px 4px 4px rgba(0,0,0,0.3)"
+              }}
+            >
+              ROMAS FOOD
+            </h1>
           </Link>
         </div>
         <nav className="flex-1 overflow-y-auto p-3">
@@ -371,10 +379,18 @@ export default function AdminLayout({ children, darkMode, toggleDarkMode }) {
             <div className="flex h-16 items-center justify-center px-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.4)' }}>
               <Link
                 to="/dashboard/admin"
-                className="flex items-center gap-2 font-semibold text-slate-700"
+                className="flex items-center gap-2 font-semibold text-slate-700 w-full justify-center"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                <img src={sbhLogo} alt="Checklist & Delegation" className="h-14 w-auto object-contain" />
+                <h1 
+                  className="text-2xl font-extrabold tracking-widest uppercase italic"
+                  style={{
+                    color: "#1e293b",
+                    textShadow: "1px 1px 0 #94a3b8, 2px 2px 0 #64748b, 3px 3px 0 #475569, 4px 4px 4px rgba(0,0,0,0.3)"
+                  }}
+                >
+                  ROMAS FOOD
+                </h1>
               </Link>
             </div>
             <nav className="flex-1 overflow-y-auto p-3">
