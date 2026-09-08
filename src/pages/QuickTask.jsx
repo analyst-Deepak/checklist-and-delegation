@@ -26,8 +26,8 @@ export default function QuickTask() {
   });
 
   const CONFIG = {
-    SHEET_ID: "1r3YHyjqv24gZXBI9IofAhodnlBuDTA3sgyzU_PNCaQg",
-    APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbyAy98t3XAyRP3pFE7XOoDiTDU3Yc9WOIFayRXELW2XnUAzl7yE9bnO94GvZV0wJkH_/exec",
+    SHEET_ID: "1A0Px7LPEr-kYLiIzAuojBb24fw79STH8lx5kae5Rp5U",
+    APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbzjRBvulOxLf0E_k_T2vT6aQfdjMrms1Ef7rdQeWZWJ1b2JVXldfRRzEAOijRThl85N/exec",
     WHATSAPP_SHEET: "Whatsapp", // For login credentials and user roles
     CHECKLIST_SHEET: "Unique", // For unique checklist tasks
     DELEGATION_SHEET: "Delegation", // For delegation tasks

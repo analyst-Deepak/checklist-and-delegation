@@ -2,9 +2,9 @@ import { useState, useEffect, useRef, useCallback } from "react"
 
 const AllTasks = () => {
   // Google Sheets configuration
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz47q4SiLvJJom8dRGteqjhufs0Iui4rYTLMeTYqOgY_MFrS0C0o0XkRCPzAOdEeg4jqg/exec"
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjRBvulOxLf0E_k_T2vT6aQfdjMrms1Ef7rdQeWZWJ1b2JVXldfRRzEAOijRThl85N/exec"
   const SHEET_NAME = "DATA"
-  const SHEET_ID = "1pso64b1nmDBPtq9V5Ay0L93smot03LKat_K0wka0XDY" // Your specific sheet ID
+  const SHEET_ID = "1A0Px7LPEr-kYLiIzAuojBb24fw79STH8lx5kae5Rp5U" // Your specific sheet ID
 
   const [tasks, setTasks] = useState([])
   const [tableHeaders, setTableHeaders] = useState([])

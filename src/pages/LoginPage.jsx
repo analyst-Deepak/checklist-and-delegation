@@ -71,7 +71,7 @@ const LoginPage = () => {
   useEffect(() => {
     const fetchMasterData = async () => {
       const SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycbyAy98t3XAyRP3pFE7XOoDiTDU3Yc9WOIFayRXELW2XnUAzl7yE9bnO94GvZV0wJkH_/exec";
+        "https://script.google.com/macros/s/AKfycbzjRBvulOxLf0E_k_T2vT6aQfdjMrms1Ef7rdQeWZWJ1b2JVXldfRRzEAOijRThl85N/exec";
       const CACHE_TTL = 60 * 60 * 1000; // 1 Hour TTL
 
       // 1. Try to load from cache first for instant UI response
@@ -189,8 +189,8 @@ const LoginPage = () => {
 
   const logAttendance = async (username, role) => {
     const SCRIPT_URL =
-      "https://script.google.com/macros/s/AKfycbyAy98t3XAyRP3pFE7XOoDiTDU3Yc9WOIFayRXELW2XnUAzl7yE9bnO94GvZV0wJkH_/exec";
-    const SPREADSHEET_ID = "1r3YHyjqv24gZXBI9IofAhodnlBuDTA3sgyzU_PNCaQg";
+      "https://script.google.com/macros/s/AKfycbzjRBvulOxLf0E_k_T2vT6aQfdjMrms1Ef7rdQeWZWJ1b2JVXldfRRzEAOijRThl85N/exec";
+    const SPREADSHEET_ID = "1A0Px7LPEr-kYLiIzAuojBb24fw79STH8lx5kae5Rp5U";
 
     try {
       // Step 1: Fetch sheet data using Apps Script to find the user's row

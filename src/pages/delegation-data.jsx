@@ -23,7 +23,7 @@ export default function DelegationPage({
 
     // Config should be memoized to prevent unnecessary re-renders
     const CONFIG = useMemo(() => ({
-        APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbyAy98t3XAyRP3pFE7XOoDiTDU3Yc9WOIFayRXELW2XnUAzl7yE9bnO94GvZV0wJkH_/exec",
+        APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbzjRBvulOxLf0E_k_T2vT6aQfdjMrms1Ef7rdQeWZWJ1b2JVXldfRRzEAOijRThl85N/exec",
         DELEGATION_SHEET: "Delegation"
     }), []);
 

@@ -100,7 +100,7 @@ const CustomDropdown = ({ options, value, onChange, placeholder, icon: Icon, cla
 };
 
 export default function AdminDashboard() {
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyAy98t3XAyRP3pFE7XOoDiTDU3Yc9WOIFayRXELW2XnUAzl7yE9bnO94GvZV0wJkH_/exec";
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjRBvulOxLf0E_k_T2vT6aQfdjMrms1Ef7rdQeWZWJ1b2JVXldfRRzEAOijRThl85N/exec";
   const [dashboardType, setDashboardType] = useState("checklist")
   const [taskView, setTaskView] = useState("recent")
   const [filterStatus, setFilterStatus] = useState("all")
@@ -329,7 +329,7 @@ export default function AdminDashboard() {
           base64Data: base64Data,
           fileName: `profile_${username}_${Date.now()}.${selectedFile.name.split('.').pop()}`,
           mimeType: selectedFile.type,
-          folderId: '1txwq9Rhrz5G7348qPtpNX0IGPdGlw6J7', // Your specified folder ID
+          folderId: '1lhhK2BHeq5t7mNLDVkTY5n8eHFe1CdKU', // Your specified folder ID
           username: username
         })
       });
